@@ -305,6 +305,7 @@ body.isPlaying .mapSignal{animation:statusPulse 2s ease-in-out infinite}
   body[data-mode="now"] .briefRail{display:flex}section{padding:16px}.newsPanel{padding:0}.newsVisual{height:190px}
 }
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+#ranktag,#s1tag{text-transform:none;letter-spacing:0}
 </style></head><body><div class="wrap">
 
 <header>
@@ -552,7 +553,7 @@ function hero(p){
   $("#herotag").textContent = `${MLBL(s.month)} · Sentinel-1 observations`;
   const moved = C ? `<div><div class="big sm">${fmt(C.nUp)} ↑ ·
       ${fmt(C.nDown)} ↓</div>
-    <div class="lbl">cells with more / less water · ${fmt(C.cells.length)} assessed</div></div>` : "";
+    <div class="lbl">areas with more / less water · ${fmt(C.cells.length)} assessed</div></div>` : "";
   const by=new Map();
   if(C) for(const c of C.cells){
     if(c.dAbs==null || !c.pn || c.d==="offshore") continue;
@@ -703,7 +704,7 @@ function rankTable(p){
     CELL_CONTEXT=key(p); CELL_SELECTED=null; CELL_TIP_DRAW=null;
   }
   const nm=C.months.length;
-  $("#ranktag").textContent = `${C.scale} m · ${nm} month${nm===1?"":"s"}`;
+  $("#ranktag").textContent = `Image squares: ${C.scale} m × ${C.scale} m · ${nm} month${nm===1?"":"s"}`;
   const mo3=M3[+C.months[C.months.length-1].slice(5,7)-1];
   const sm=small();
   const SEG=[["move",sm?"Monthly change":"Monthly water change"]]
@@ -783,7 +784,7 @@ function rankTable(p){
       <td>${spark(c.v, small()?58:74, 20)}</td></tr>`;
   }).join("");
   el.innerHTML = roll + `<table class="rank"><thead><tr>
-      <th></th><th>District · cell</th><th>km² now</th><th>Δ km²</th>
+      <th></th><th>District · review area</th><th>km² now</th><th>Δ km²</th>
       <th class="hideS">vs past ${mo3}</th>
       <th>${nm} months</th></tr></thead><tbody>${body}</tbody></table>`;
   $("#rankcap").innerHTML = cap+" Select a row to locate it on the map.";
@@ -910,7 +911,7 @@ function gridMapLegacy(p){
       : `<span><i style="background:var(--acc)"></i>surface water</span>`;
     $("#cmpMap").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img"
       aria-label="interactive surface-water comparison map">${out}</svg>
-      <div class="legend"><span>each square ${fmt(st*111*kx,1)} ×
+      <div class="legend"><span>Review area: ${fmt(st*111*kx,1)} km ×
       ${fmt(st*111,1)} km</span>${legend}</div>`;
   };
 
@@ -1172,7 +1173,7 @@ function gridMap(p){
       <svg viewBox="0 0 ${W} ${H}" role="img"
         aria-label="interactive surface-water comparison map">${out}</svg>
       <div class="cellTip" id="cellTip" role="status" hidden></div></div>
-      <div class="legend"><span>each square ${fmt(st*111*kx,1)} ×
+      <div class="legend"><span>Review area: ${fmt(st*111*kx,1)} km ×
       ${fmt(st*111,1)} km</span>${legend}</div>`;
 
     CELL_TIP_DRAW=(index,show=true)=>{
@@ -1321,7 +1322,7 @@ function monthlyChart(p){
   const {mm,idx}=s;
   if(idx.length<2){ el.innerHTML="";
     $("#s1cap").textContent="Monthly series still building."; return; }
-  $("#s1tag").textContent=`Sentinel-1 ${mm.scale} m`;
+  $("#s1tag").textContent=`Image squares: ${mm.scale} m × ${mm.scale} m`;
   /* TWO PANELS ON ONE X-AXIS, NOT TWO LINES ON ONE Y-AXIS. Sharing a y-axis scaled
      to all-surface water (1,138-1,644 km²) squashed pond-sized water (512-711) into
      the bottom quarter, so the series the page is about was the unreadable one. Two
@@ -1571,7 +1572,7 @@ function regionalMap(sel){
   const withCells=Object.keys(D.cells).length;
   $("#regcap").innerHTML = `${hp.length} surveyed provinces ·
     <b>${fmt(hp.reduce((a,b)=>a+b.km2,0))} km²</b> mapped pond area in 2020.
-    Monthly 10 m coverage currently exists for <b>${withCells}</b> province.`;
+    Monthly imagery with 10 m × 10 m ground squares is available for <b>${withCells}</b> province.`;
 }
 
 /* ------------------------------------------------- province detail + facts */
@@ -1628,8 +1629,8 @@ function detail(p){
         <div class="k">of ${D.provinces.length} surveyed provinces</div></div>
     </div>
     <p class="cap"><b>${ord(ci)}</b> largest of ${co.length} surveyed provinces in
-      ${esc(p.country)}. CLAP is a 30 m mapped-area product, not a farm registry;
-      dots and connected objects must not be read as farm counts.</p>
+      ${esc(p.country)}. CLAP maps pond area in 30 m × 30 m squares;
+      mapped objects are not individual farm records.</p>
     </div></div>`;
 }
 
@@ -2071,10 +2072,10 @@ function layout(){
 function footer(){
   $("#foot").innerHTML = `
   <details class="method"><summary>Sources, methods and limitations</summary>
-  <p><b>Monthly layer:</b> Sentinel-1 at 10 m, VV median below −14 dB and a
+  <p><b>Monthly layer:</b> Sentinel-1 imagery on a 10 m × 10 m ground grid, VV median below −14 dB and a
   component-size filter. It measures surface water, not farms or disease.</p>
-  <p><b>Regional layer:</b> CLAP 2020 at 30 m; JRC year-round-water records end in
-  2021. Monthly 10 m coverage currently exists for <b>${Object.keys(D.cells).length}
+  <p><b>Regional layer:</b> CLAP 2020 uses 30 m × 30 m map squares; JRC year-round-water records end in
+  2021. Monthly imagery with 10 m × 10 m ground squares is available for <b>${Object.keys(D.cells).length}
   of ${D.provinces.length}</b> surveyed provinces.</p>
   <p><b>Prototype playback:</b> the animated chart replays recorded observations;
   it is not a live satellite feed.</p>
