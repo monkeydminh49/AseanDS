@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch publisher headlines from Google News RSS for the Pondsight prototype.
+"""Fetch publisher headlines from Google News RSS for the AquaEye prototype.
 
 Install requirements-news.txt, then run `refresh` for GitHub Pages or `serve`
 for a local preview with an RSS endpoint. No API keys or translation service.
@@ -66,7 +66,7 @@ def parse_stamp(value):
 
 
 def locations():
-    match = re.search(r"window\.__PONDSIGHT__ = (.*?);</script>", PAGE.read_text())
+    match = re.search(r"window\.__AQUAEYE__ = (.*?);</script>", PAGE.read_text())
     data = json.loads(match.group(1))
     return [(p["country"], p["province"]) for p in data["provinces"]]
 
@@ -153,7 +153,7 @@ def fetch_feed(country, province=None, previous=None, opener=urlopen, now=None):
     base = {"country": country, "province": province, "scope": "province" if province else "country",
             "queryUrl": url, "lastAttemptAt": stamp(now), "language": "en"}
     try:
-        request = Request(url, headers={"User-Agent": "Pondsight-News/1.0 (RSS reader)", "Accept": "application/rss+xml, application/xml"})
+        request = Request(url, headers={"User-Agent": "AquaEye-News/1.0 (RSS reader)", "Accept": "application/rss+xml, application/xml"})
         with opener(request, timeout=15) as response:
             payload = response.read(2_000_001)
         if len(payload) > 2_000_000:
@@ -182,7 +182,7 @@ def save_cache(data):
     data["generatedAt"] = stamp(utcnow())
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     # A local script bootstrap also works when the prototype is opened as file://.
-    js = "window.__PONDSIGHT_NEWS__=" + payload.replace("<", "\\u003c").replace(">", "\\u003e").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029") + ";\n"
+    js = "window.__AQUAEYE_NEWS__=" + payload.replace("<", "\\u003c").replace(">", "\\u003e").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029") + ";\n"
     for path, content in [(CACHE, payload + "\n"), (CACHE.with_suffix(".js"), js)]:
         temp = path.with_suffix(path.suffix + ".tmp")
         temp.write_text(content)
@@ -244,8 +244,8 @@ def serve(port):
                 self.wfile.write(payload)
                 return
             if parsed.path in ("/", "/index.html", "/index-codex-ver.html"):
-                page = PAGE.read_text().replace('<meta name="pondsight-news-api" content="">',
-                                               '<meta name="pondsight-news-api" content="/api/news">')
+                page = PAGE.read_text().replace('<meta name="aquaeye-news-api" content="">',
+                                               '<meta name="aquaeye-news-api" content="/api/news">')
                 payload = page.encode()
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
@@ -255,7 +255,7 @@ def serve(port):
                 return
             super().do_GET()
 
-    print(f"Pondsight: http://127.0.0.1:{port} (RSS cached for 30 minutes)", flush=True)
+    print(f"AquaEye: http://127.0.0.1:{port} (RSS cached for 30 minutes)", flush=True)
     ThreadingHTTPServer(("127.0.0.1", port), Handler).serve_forever()
 
 
