@@ -1,0 +1,19 @@
+{
+  "href": "https://server.arcgisonline.com/arcgis/rest/directories/arcgisoutput/World_Imagery_MapServer/_ags_mapb78656b5a8244882b6d5c6c9b910b4c7.jpg",
+  "width": 1400,
+  "height": 2000,
+  "extent": {
+    "xmin": 11649180.043849297,
+    "ymin": 949705.7066938115,
+    "xmax": 11755742.895436464,
+    "ymax": 1101938.3518183357,
+    "spatialReference": {
+      "wkid": 102100,
+      "latestWkid": 3857
+    }
+  },
+  "scale": 287683.16345052095,
+  "retrieved": "2026-09-11",
+  "service": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export",
+  "credits": "Esri, Vantor, Earthstar Geographics, and the GIS User Community"
+}

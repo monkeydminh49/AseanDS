@@ -15,3 +15,12 @@ in the HTML. News cards display publisher headlines from Google News RSS; these
 location images are contextual basemaps, not photographs from those articles.
 
 See [the news feed setup](../news/README.md) for refresh and source details.
+
+## Inspection-map satellite background
+
+`ca-mau-monitor-basemap.jpg` is an Esri World Imagery export retrieved on
+11 September 2026, with an exact EPSG:3857 extent in
+`ca-mau-monitor-basemap.json`. The source export request is recorded there.
+`monitor.js` projects each cell corner into this same extent before rendering
+the measured Sentinel-1 water-change overlay. The background date does not
+change with the observation-month selector. Visible attribution is retained.

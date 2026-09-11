@@ -1,0 +1,56 @@
+/* Satellite map and inspection planner. Colour encodes observed water change. */
+body[data-mode="now"] .coverageStrip{display:none}
+body[data-mode="now"] .playbackControl{display:none}
+body[data-mode="now"] .pageHeading{margin:17px 0 13px}
+body[data-mode="now"] h1{font-size:26px;letter-spacing:-.035em}
+#mission[hidden]{display:none}
+#mission{padding:0;overflow:hidden;background:#102c36;border:1px solid #284751;color:#eaf5f4;margin-top:16px}
+.missionTop{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:13px 18px;border-bottom:1px solid #36515b}
+.missionTop h2{font-size:18px;text-transform:none;letter-spacing:-.025em;color:#f5faf9;margin:0}
+.missionTop p{font-size:11px;color:#b6ced0;margin:3px 0 0}
+.missionPeriod{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.missionPeriod label{font-size:10px;letter-spacing:0;text-transform:none;margin:0;color:#bed5d8}
+.missionPeriod select{font:12px system-ui;min-width:150px;background:#173944;border-color:#506c73;color:#fff;padding:7px 10px}
+.missionBody{display:grid;grid-template-columns:minmax(0,1fr) 334px;min-height:560px}
+.missionMap{position:relative;min-width:0;overflow:hidden;background:#233e3b}
+#satMap{height:560px;overflow:hidden;touch-action:none;cursor:grab}
+#satMap:active{cursor:grabbing}
+#satMap svg{width:100%;height:100%;display:block}
+#satMap .monitor-cell{cursor:pointer;vector-effect:non-scaling-stroke}
+#satMap .monitor-cell:focus-visible{outline:none;stroke:white;stroke-width:3}
+#satMap .monitor-marker{cursor:pointer}
+.mapTools{position:absolute;top:12px;right:12px;display:flex;gap:5px}
+.mapTools button,.missionAction{font:12px system-ui;cursor:pointer;border:1px solid #628183;border-radius:5px;color:#fff;background:#102d38;padding:7px 10px}
+.mapTools button[aria-pressed="true"]{background:#d8ef91;color:#122d36;border-color:#d8ef91}
+.mapTools button:focus-visible,.missionAction:focus-visible{outline-color:#e4ff98}
+.mapLegend{position:absolute;bottom:34px;left:12px;display:flex;gap:15px;flex-wrap:wrap;background:#0d2737ed;padding:8px 11px;border-radius:5px;font-size:11px;color:#edf7f6;pointer-events:none}
+.mapLegend i{display:inline-block;width:9px;height:9px;border:1px solid #ffffff70;margin-right:5px}
+.mapLegend .gain{background:#4298f0}.mapLegend .loss{background:#ed875e}
+.mapCredit{position:absolute;bottom:0;left:0;right:0;background:#0b223bdc;padding:5px 10px;font-size:9px;color:#c5d8df}
+.mapNorth{position:absolute;top:14px;left:14px;font-size:11px;line-height:1.1;text-align:center;background:#102d38dd;padding:7px 9px;border-radius:5px;pointer-events:none}
+.mapNorth b{display:block;font-size:20px}
+.mapScope{position:absolute;left:12px;bottom:76px;background:#102d38eb;border-left:2px solid #d8ef91;padding:8px 10px;font-size:11px;pointer-events:none}
+.mapScope b{font-size:14px;color:#e6f4b9;display:block}
+.missionRail{padding:17px;background:#f8faf7;color:#173541;min-width:0}
+.missionRail h3{font-size:16px;margin:0 0 3px;letter-spacing:-.02em}
+.missionRail .railIntro{font-size:11px;color:#546a70;margin:0 0 10px;line-height:1.5}
+.missionFilter{display:flex;gap:4px;margin:0 0 12px}
+.missionFilter button{font:10px system-ui;cursor:pointer;padding:6px 8px;border:1px solid #c3d1cd;border-radius:4px;background:#fff;color:#425d66}
+.missionFilter button[aria-pressed="true"]{background:#173e4c;border-color:#173e4c;color:#fff}
+.candidate{width:100%;display:grid;grid-template-columns:23px 1fr auto;gap:8px;text-align:left;border:0;border-bottom:1px solid #d7e1da;background:transparent;padding:10px 3px;color:#183c47;cursor:pointer;font:12px system-ui;align-items:center}
+.candidate .number{width:22px;height:22px;border:1px solid #afbfac;border-radius:50%;display:grid;place-items:center;font-size:10px}
+.candidate strong{font-size:12px;display:block}.candidate small{display:block;font-size:10px;color:#5b7278;margin-top:3px}
+.candidate .delta{font-size:12px;font-weight:650;color:#2579b6}.candidate .delta.loss{color:#b95026}
+.candidate[aria-pressed="true"]{background:#e4efdf}.candidate[aria-pressed="true"] .number{background:#183e4b;color:white;border-color:#183e4b}
+.candidate:focus-visible{outline-color:#2579b6;outline-offset:-2px}
+.inspectionAction{margin-top:13px;border-left:3px solid #487b56;background:#eaf1e5;padding:11px 12px;font-size:11px;line-height:1.5}
+.inspectionAction h4{margin:0 0 5px;font-size:12px}.inspectionAction p{margin:0;color:#405b60}
+.inspectionAction .coord{font-size:10px;color:#60766f;margin-bottom:5px}
+.inspectionAction a{color:#245f84;display:inline-block;margin-top:7px;text-decoration:none;font-weight:600}
+.missionExport{display:flex;gap:7px;margin-top:12px}.missionExport button{background:#193f4c;font:11px system-ui;padding:8px 12px}
+.missionBottom{display:flex;justify-content:space-between;gap:16px;padding:11px 18px;font-size:11px;background:#183942;color:#cfe0df;line-height:1.5}
+.missionBottom b{color:#e7f5c9}.missionBottom p{margin:0}.missionBottom a{color:#dcf294}
+.missionStatus{min-height:16px;font-size:10px;margin:6px 0 0;color:#4b6970}
+body[data-mode="now"] #overview{margin-top:12px}
+@media(max-width:1000px){.missionBody{grid-template-columns:minmax(0,1fr) 300px}.missionRail{padding:13px}.missionTop{align-items:flex-start}#satMap{height:590px}}
+@media(max-width:720px){.missionBody{display:block}.missionTop{flex-wrap:wrap}.missionPeriod{width:100%;justify-content:space-between}#satMap{height:430px}.missionBody{min-height:0}.missionRail{padding:17px}.missionBottom{display:block}.missionBottom p+p{margin-top:7px}.mapTools button{padding:7px 8px}.mapLegend{font-size:10px;gap:9px}.mapScope{font-size:10px}.missionTop h2{font-size:17px}body[data-mode="now"] h1{font-size:24px}}
