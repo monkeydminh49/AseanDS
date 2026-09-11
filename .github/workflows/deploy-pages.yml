@@ -1,0 +1,90 @@
+name: Deploy prototype to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - index.html
+      - assets/**
+      - news/**
+      - CNAME
+      - scripts/brief_news.py
+      - scripts/test_brief_news.py
+      - scripts/requirements-news.txt
+      - .github/workflows/deploy-pages.yml
+  workflow_dispatch:
+  schedule:
+    - cron: '17,47 * * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install headline language detection
+        run: python -m pip install -r scripts/requirements-news.txt
+
+      - name: Restore recent news for fallback
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            news/latest.json
+            news/latest.js
+          key: pondsight-news-english-v1-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: pondsight-news-english-v1-
+
+      - name: Check news parsing and cache handling
+        run: python -m unittest discover -s scripts -p 'test_brief_news.py'
+
+      - name: Refresh publisher headlines
+        run: python scripts/brief_news.py refresh
+
+      - name: Save recent news for the next refresh
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            news/latest.json
+            news/latest.js
+          key: pondsight-news-english-v1-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Prepare prototype site
+        run: |
+          mkdir -p _site
+          cp index.html CNAME _site/
+          cp -R assets _site/assets
+          mkdir -p _site/news
+          cp news/latest.json news/latest.js _site/news/
+          touch _site/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
