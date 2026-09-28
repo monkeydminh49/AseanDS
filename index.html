@@ -2073,20 +2073,17 @@ function layout(){
 }
 function footer(){
   $("#foot").innerHTML = `
-  <details class="method"><summary>Sources, methods and limitations</summary>
+  <details class="method"><summary>Sources and methods</summary>
   <p><b>Monthly layer:</b> Sentinel-1 imagery on a 10 m × 10 m ground grid, VV median below −14 dB and a
-  component-size filter. It measures surface water, not farms or disease.</p>
+  component-size filter.</p>
   <p><b>Regional layer:</b> CLAP 2020 uses 30 m × 30 m map squares; JRC year-round-water records end in
   2021. Monthly imagery with 10 m × 10 m ground squares is available for <b>${Object.keys(D.cells).length}
   of ${D.provinces.length}</b> surveyed provinces.</p>
-  <p><b>Prototype playback:</b> the animated chart replays recorded observations;
-  it is not a live satellite feed.</p>
   <p><b>Regional news:</b> publisher headlines and publication dates are retrieved
   from the English edition of Google News RSS using province names and aquaculture, water and coastal
   environment keywords. Coverage is limited to the past 90 days. Country-level
   fallback is labelled explicitly. Article links use the RSS links supplied by
-  Google News; headlines are checked for English and are not translated or rewritten.
-  Language detection may omit short or ambiguous headlines. Publisher names retain
+  Google News; headlines are checked for English and are not translated or rewritten. Publisher names retain
   their original spelling; linked article bodies are not translated. Location images are
   contextual basemaps, not photographs from the articles. RSS is checked every
   30 minutes by the local server or scheduled site build; an open page checks for
@@ -2094,8 +2091,6 @@ function footer(){
   <p><b>Location imagery:</b> Esri World Imagery basemap for Cà Mau, retrieved
   11 September 2026. Basemap credits: Esri, Vantor, Earthstar Geographics and the
   GIS User Community. Other province illustrations use the bundled geoBoundaries shapes.</p>
-  <p><b>Publication:</b> CLAP's Zenodo licence field is empty; geoBoundaries carries
-  ODbL terms in six states. Resolve both before redistribution.</p>
   <p>Built ${D.built} · newest measurement ${D.newest||"—"}.</p></details>`;
 }
 function draw(){
