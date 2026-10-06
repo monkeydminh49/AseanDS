@@ -9,6 +9,7 @@ from urllib.parse import parse_qs, urlparse
 from xml.sax.saxutils import escape
 
 import brief_news as news
+import json
 
 NOW = datetime(2026, 9, 11, 8, tzinfo=timezone.utc)
 
@@ -24,6 +25,20 @@ def rss(*items):
 
 
 class NewsTests(unittest.TestCase):
+    def test_locations_read_react_observation_data(self):
+        with tempfile.TemporaryDirectory() as directory:
+            observations = Path(directory) / "observations.json"
+            observations.write_text(json.dumps({"provinces": [
+                {"country": "Viet Nam", "province": "Cà Mau"},
+                {"country": "Indonesia", "province": "North Kalimantan"},
+            ]}))
+            with patch.object(news, "OBSERVATIONS", observations), patch.object(
+                news, "PAGE", Path(directory) / "missing-legacy-page.html"
+            ):
+                self.assertEqual(news.locations(), [
+                    ("Viet Nam", "Cà Mau"), ("Indonesia", "North Kalimantan")
+                ])
+
     def test_deduplicate_sort_and_preserve_dates_and_publishers(self):
         payload = rss(
             item("Coastal water quality improved during the previous month - Publisher", date="Thu, 10 Sep 2026 07:00:00 GMT"),

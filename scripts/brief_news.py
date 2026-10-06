@@ -26,6 +26,7 @@ from langdetect.detector_factory import PROFILES_DIRECTORY
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT
 PAGE = SITE / "index.html"
+OBSERVATIONS = SITE / "public/data/observations.json"
 CACHE = SITE / "news/latest.json"
 TTL = timedelta(minutes=30)
 LOOKBACK = timedelta(days=90)
@@ -66,8 +67,7 @@ def parse_stamp(value):
 
 
 def locations():
-    match = re.search(r"window\.__AQUAEYE__ = (.*?);</script>", PAGE.read_text())
-    data = json.loads(match.group(1))
+    data = json.loads(OBSERVATIONS.read_text())
     return [(p["country"], p["province"]) for p in data["provinces"]]
 
 

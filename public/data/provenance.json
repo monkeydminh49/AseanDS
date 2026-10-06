@@ -1,0 +1,9 @@
+{
+  "source": "AseanDS/reference/legacy-index.html",
+  "upstreamRepository": "https://github.com/monkeydminh49/AseanDS.git",
+  "upstreamCommit": "cd91ff8dc60255687d66bf054c8976f5c333810a",
+  "sha256": "ca8b65bc303222064e2b1c2e2171db422b2ec73e09dd95cb561596b999ce1aa5",
+  "built": "2026-09-03",
+  "latestObservation": "2026-08",
+  "note": "Local research snapshot; no live satellite ingestion. Grid cells are review areas, not individual ponds. Water change is not a disease diagnosis."
+}

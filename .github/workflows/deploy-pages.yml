@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - index.html
+      - src/**
+      - public/**
+      - package.json
+      - package-lock.json
+      - vite.config.js
       - assets/**
       - news/**
       - CNAME
@@ -36,6 +41,15 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install website dependencies
+        run: npm ci
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -68,14 +82,12 @@ jobs:
             news/latest.js
           key: aquaeye-news-english-v1-${{ github.run_id }}-${{ github.run_attempt }}
 
-      - name: Prepare prototype site
+      - name: Build React website
         run: |
-          mkdir -p _site
-          cp index.html CNAME _site/
-          cp -R assets _site/assets
-          mkdir -p _site/news
-          cp news/latest.json news/latest.js _site/news/
-          touch _site/.nojekyll
+          cp news/latest.json public/data/news.json
+          npm run build
+          cp CNAME dist/
+          touch dist/.nojekyll
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -83,7 +95,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: _site
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
